@@ -12,6 +12,4 @@ spring:
         binder:
           nodes: localhost:5672
   jpa:
-    hibernate:
-      ddl-auto: create-drop
     show-sql: true
