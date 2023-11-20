@@ -121,7 +121,7 @@ class AuthServiceImplTest {
     }
 
     private static User getUser() {
-        return new User(1L, EMAIL, NICKNAME, PASSWORD, new byte[100]);
+        return new User(1L, EMAIL, NICKNAME, PASSWORD, new byte[100], false);
     }
 
     private static LoginRequestDto getLoginRequestDto() {

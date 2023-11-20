@@ -8,6 +8,9 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 
 import static org.mockito.Mockito.any;
@@ -20,6 +23,9 @@ public class ExceptionHandlerIntegrationTest extends AuthConfigurator {
     @MockBean
     private AuthService authService;
 
+    private static final MockMultipartFile VALID_AVATAR =
+            new MockMultipartFile("avatar", "user.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[1]);
+
     @Test
     @DisplayName("SingUp: Should return 500 INTERNAL SERVER ERROR if the avatar cannot be read")
     @SneakyThrows
@@ -30,8 +36,17 @@ public class ExceptionHandlerIntegrationTest extends AuthConfigurator {
         when(authService.singUp(any())).thenThrow(new CannotUploadFileException(message));
 
         mockMvc.perform(multipart("/singup")
-                        .part(new MockPart("avatar", VALID_AVATAR.getBytes()), new MockPart("user", objectMapper.writeValueAsBytes(dto))))
+                        .file(VALID_AVATAR)
+                        .part(buildUserPart(dto)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().json(objectMapper.writeValueAsString(new ErrorMessage(message))));
+    }
+
+    @SneakyThrows
+    protected <T> MockPart buildUserPart(T dto) {
+        MockPart mockPart = new MockPart("user", objectMapper.writeValueAsBytes(dto));
+        mockPart.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+
+        return mockPart;
     }
 }
