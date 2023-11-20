@@ -1,0 +1,32 @@
+server:
+  port: 8082
+spring:
+  jpa:
+    hibernate.ddl-auto: ${DDL_AUTO}
+    show-sql: ${SHOW_SQL}
+  datasource:
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${DATABASE_URL}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+  cloud:
+    function:
+      definition: userUpdateConsumer
+    stream:
+      bindings:
+        userUpdateConsumer-in-0:
+          destination: user
+          group: user.telegram
+      rabbit:
+        default:
+          consumer:
+            queue-name-group-only: true
+            bind-queue: false
+            declare-exchange: false
+        bindings:
+          userUpdateConsumer-in-0:
+            consumer-tag-prefix: ${spring.application.name}-userUpdateConsumer
+        binder:
+          nodes: ${RABBIT_NODE}

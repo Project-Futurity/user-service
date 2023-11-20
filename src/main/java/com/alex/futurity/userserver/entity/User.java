@@ -33,6 +33,9 @@ public class User {
     @Lob
     private byte[] avatar;
 
+    @Column
+    private boolean hasTelegram;
+
     public User(String email, String nickname, String password, byte[] avatar) {
         this.email = email;
         this.nickname = nickname;
