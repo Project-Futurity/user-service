@@ -4,7 +4,7 @@ spring:
   rabbitmq:
     username: ${RABBIT_USERNAME}
     password: ${RABBIT_PASSWORD}
-    host: ${RABBIT_NODE}
+    addresses: ${RABBIT_NODE}
   jpa:
     hibernate:
       ddl-auto: update
