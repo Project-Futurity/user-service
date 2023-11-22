@@ -4,6 +4,7 @@ spring:
   rabbitmq:
     username: ${RABBIT_USERNAME}
     password: ${RABBIT_PASSWORD}
+    host: ${RABBIT_NODE}
   jpa:
     hibernate:
       ddl-auto: update
@@ -32,5 +33,3 @@ spring:
         bindings:
           userUpdateConsumer-in-0:
             consumer-tag-prefix: ${spring.application.name}-userUpdateConsumer
-        binder:
-          nodes: ${RABBIT_NODE}
